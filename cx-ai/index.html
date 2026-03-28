@@ -693,5 +693,25 @@ body {
   </div>
 
 </div>
+
+<script>
+  /* ── iframe 自動高さ調整 ──
+     親ページに現在の高さを postMessage で通知する。
+     ページ読み込み時・ウィンドウリサイズ時・DOM変化時に発火。 */
+  (function () {
+    function sendHeight() {
+      var h = Math.max(
+        document.body.scrollHeight,
+        document.documentElement.scrollHeight
+      );
+      window.parent.postMessage({ iframeHeight: h }, '*');
+    }
+    window.addEventListener('load', sendHeight);
+    window.addEventListener('resize', sendHeight);
+    if (window.ResizeObserver) {
+      new ResizeObserver(sendHeight).observe(document.body);
+    }
+  })();
+</script>
 </body>
 </html>
