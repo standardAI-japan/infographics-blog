@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@StandardAI_szk">
+<meta property="og:title" content="FCRからNCRへ ── 「顧客が接触しない」コンタクトセンターという設計思想">
+<meta property="og:description" content="「いかに初回で解決するか」から「そもそも接触させない」へ。NCR（No Contact Resolution）という設計思想が日本のコンタクトセンターに問いかけること。">
+<meta property="og:url" content="https://standardai-japan.github.io/infographics-blog/ncr/">
+<title>FCRからNCRへ | Standard AI</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: #E2E2E2;
+  font-family: 'Helvetica Neue', 'Hiragino Kaku Gothic ProN', 'Yu Gothic Medium', 'Yu Gothic', sans-serif;
+  margin: 0; padding: 0;
+}
+
+/* ── SITE HEADER ── */
+.site-header {
+  background: #FFFFFF; border-bottom: 1px solid #EBEBEB;
+  position: sticky; top: 0; z-index: 100;
+}
+.sh-inner {
+  max-width: 1280px; margin: 0 auto; padding: 0 40px;
+  height: 72px; display: flex; align-items: center;
+}
+.site-header a { display: flex; align-items: center; text-decoration: none; }
+.site-header img { height: 34px; width: auto; display: block; }
+
+/* ── PAGE WRAP ── */
+.page-wrap { padding: 48px 20px 60px; }
+.ig {
+  max-width: 800px; margin: 0 auto;
+  background: #FFFFFF;
+  box-shadow: 0 4px 40px rgba(0,0,0,0.13);
+}
+
+/* ── INFOGRAPHIC HEADER ── */
+.ig-header {
+  background: #212121; color: #fff;
+  padding: 48px 52px 44px; position: relative; overflow: hidden;
+}
+.deco1 {
+  position: absolute; right: -60px; top: -60px;
+  width: 260px; height: 260px; border-radius: 50%;
+  background: rgba(0,159,153,0.12);
+}
+.deco2 {
+  position: absolute; right: 80px; bottom: -90px;
+  width: 200px; height: 200px; border-radius: 50%;
+  background: rgba(206,34,40,0.07);
+}
+.ig-eyebrow {
+  font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase;
+  color: #009F99; font-weight: 700; margin-bottom: 14px; position: relative; z-index: 1;
+}
+.ig-title {
+  font-size: 25px; font-weight: 800; line-height: 1.35;
+  margin-bottom: 8px; position: relative; z-index: 1; letter-spacing: -0.5px;
+}
+.ig-title .accent { color: #009F99; }
+.ig-sub {
+  font-size: 13px; font-weight: 500; color: rgba(255,255,255,0.45);
+  margin-bottom: 20px; position: relative; z-index: 1;
+}
+.ig-lead {
+  font-size: 13px; color: rgba(255,255,255,0.6);
+  line-height: 1.8; max-width: 500px; position: relative; z-index: 1;
+}
+
+/* ── SECTIONS ── */
+.ig-section { padding: 40px 52px; border-bottom: 1px solid #EDF0F4; }
+.ig-section:last-of-type { border-bottom: none; }
+.sec-eyebrow {
+  font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase;
+  font-weight: 700; margin-bottom: 8px;
+}
+.sec-title {
+  font-size: 19px; font-weight: 700; color: #212121;
+  line-height: 1.4; margin-bottom: 28px;
+}
+.sec-body { font-size: 13.5px; color: #374151; line-height: 1.8; margin-bottom: 20px; }
+.teal { color: #009F99; }
+.red  { color: #CE2228; }
+.gray { color: #9CA3AF; }
+.sec-odd  { background: #FFFFFF; }
+.sec-even { background: #F5F5F5; }
+
+/* ── COMPARE (FCR vs NCR) ── */
+.cmp-block-title {
+  font-size: 11px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase;
+  color: #6B7280; text-align: center; margin-bottom: 14px;
+}
+.compare-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; align-items: start; }
+.cmp-label {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase;
+  padding: 9px 16px; border-radius: 4px 4px 0 0; text-align: center;
+}
+.cmp-label.old { background: #EBEBEB; color: #6B7280; }
+.cmp-label.new { background: #009F99; color: #fff; }
+.cmp-items { }
+.cmp-item {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 12px 16px; font-size: 13px; font-weight: 500; line-height: 1.5; color: #212121;
+  border-bottom: 1px solid #F3F4F6;
+}
+.cmp-item:last-child { border-bottom: none; }
+.cmp-item.old-item { background: #F9F9F9; }
+.cmp-item.new-item { background: #F0FAF9; }
+.cmp-dot-old { width: 6px; height: 6px; border-radius: 50%; background: #9CA3AF; flex-shrink: 0; margin-top: 6px; }
+.cmp-dot-new { width: 6px; height: 6px; border-radius: 50%; background: #009F99; flex-shrink: 0; margin-top: 6px; }
+
+/* ── INSIGHT / WARN BOX ── */
+.insight-box {
+  margin-top: 20px; background: #F0FAF9;
+  border-left: 3px solid #009F99; border-radius: 0 6px 6px 0;
+  padding: 14px 18px; font-size: 13.5px; font-weight: 600; color: #212121; line-height: 1.6;
+}
+.insight-box .pre { color: #009F99; margin-right: 6px; }
+.warn-box {
+  margin-top: 20px; background: #FFF5F5;
+  border-left: 3px solid #CE2228; border-radius: 0 6px 6px 0;
+  padding: 14px 18px; font-size: 13.5px; font-weight: 600; color: #212121; line-height: 1.6;
+}
+.warn-box .pre { color: #CE2228; margin-right: 6px; }
+
+/* ── BIG NUMBER ── */
+.big-num-wrap {
+  display: flex; align-items: center; gap: 28px;
+  background: #212121; border-radius: 10px; padding: 28px 32px; margin-bottom: 20px;
+}
+.big-num {
+  font-size: 64px; font-weight: 800; color: #009F99;
+  line-height: 1; flex-shrink: 0; letter-spacing: -2px;
+}
+.big-num-label { font-size: 14px; font-weight: 600; color: rgba(255,255,255,0.85); line-height: 1.65; }
+.big-num-label .highlight { color: #fff; font-weight: 700; }
+.big-num-source { font-size: 10px; color: rgba(255,255,255,0.35); margin-top: 10px; line-height: 1.6; }
+.big-num-source a { color: rgba(255,255,255,0.4); }
+
+/* ── BENEFITS GRID ── */
+.benefit-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px;
+}
+.benefit-card {
+  background: #F9F9F9; border-radius: 8px;
+  padding: 16px 18px; display: flex; align-items: flex-start; gap: 12px;
+}
+.benefit-card .b-icon { font-size: 20px; flex-shrink: 0; }
+.benefit-card .b-text { font-size: 13px; font-weight: 600; color: #374151; line-height: 1.5; }
+.benefit-card.teal-card { background: #F0FAF9; }
+.benefit-card.teal-card .b-text { color: #006B68; }
+
+.point-box {
+  background: #212121; color: #fff; border-radius: 8px;
+  padding: 22px 28px; text-align: center;
+}
+.point-box .pl { font-size: 10px; letter-spacing: 0.2em; font-weight: 700; color: #009F99; text-transform: uppercase; margin-bottom: 10px; }
+.point-box .pt { font-size: 16px; font-weight: 700; line-height: 1.6; color: #fff; }
+.point-box .pt .hl { color: #009F99; }
+
+/* ── CHALLENGE CARDS ── */
+.challenge-wrap { display: flex; flex-direction: column; gap: 12px; }
+.challenge-card {
+  border: 1.5px solid #EDF0F4; border-radius: 8px; overflow: hidden;
+}
+.challenge-head {
+  display: flex; align-items: center; gap: 14px;
+  padding: 14px 20px; background: #F9F9F9; border-bottom: 1px solid #EDF0F4;
+}
+.challenge-num {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: #CE2228; color: #fff;
+  font-size: 13px; font-weight: 800;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.challenge-title { font-size: 14px; font-weight: 700; color: #212121; }
+.challenge-body { padding: 14px 20px; font-size: 13px; color: #374151; line-height: 1.7; }
+
+/* ── KPI TABLE ── */
+.kpi-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+.kpi-table th {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+  padding: 10px 16px; text-align: left;
+}
+.kpi-table th.th-existing { background: #EBEBEB; color: #6B7280; }
+.kpi-table th.th-new      { background: #009F99; color: #fff; }
+.kpi-table td {
+  padding: 11px 16px; font-size: 13px; color: #374151; line-height: 1.5;
+  border-bottom: 1px solid #F3F4F6; vertical-align: top;
+}
+.kpi-table tr:last-child td { border-bottom: none; }
+.kpi-table tr:nth-child(odd) td.td-existing  { background: #F9F9F9; }
+.kpi-table tr:nth-child(even) td.td-existing { background: #F3F3F3; }
+.kpi-table tr:nth-child(odd) td.td-new  { background: #F0FAF9; }
+.kpi-table tr:nth-child(even) td.td-new { background: #E8F7F6; }
+.kpi-badge {
+  display: inline-block; font-size: 11px; font-weight: 700;
+  padding: 2px 8px; border-radius: 10px; margin-bottom: 4px; display: block;
+}
+.kpi-badge.existing { background: #EBEBEB; color: #6B7280; }
+.kpi-badge.new-kpi  { background: #D6F1F0; color: #006B68; }
+.kpi-desc { font-size: 12px; color: #6B7280; }
+
+/* ── STEP FLOW ── */
+.step-flow { display: flex; flex-direction: column; gap: 0; }
+.flow-item {
+  display: flex; align-items: flex-start; gap: 0;
+}
+.flow-line {
+  display: flex; flex-direction: column; align-items: center; flex-shrink: 0; width: 40px;
+}
+.flow-dot {
+  width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; margin-top: 4px;
+}
+.flow-dot.short { background: #009F99; }
+.flow-dot.mid   { background: #212121; }
+.flow-connector { width: 2px; flex: 1; min-height: 20px; }
+.flow-connector.short { background: #D6F1F0; }
+.flow-connector.mid   { background: #D1D5DB; }
+.flow-content { padding: 0 0 24px 0; flex: 1; }
+.flow-tag {
+  display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: 0.12em;
+  text-transform: uppercase; padding: 3px 10px; border-radius: 10px; margin-bottom: 8px;
+}
+.flow-tag.short { background: #D6F1F0; color: #006B68; }
+.flow-tag.mid   { background: #212121; color: #fff; }
+.flow-title { font-size: 14px; font-weight: 700; color: #212121; margin-bottom: 6px; }
+.flow-items { display: flex; flex-direction: column; gap: 5px; }
+.flow-item-text {
+  display: flex; align-items: flex-start; gap: 8px;
+  font-size: 13px; color: #374151; line-height: 1.5;
+}
+.flow-item-text::before {
+  content: ''; width: 5px; height: 5px; border-radius: 50%;
+  background: #9CA3AF; flex-shrink: 0; margin-top: 7px;
+}
+
+/* ── CONCLUSION ── */
+.conc-compare {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px;
+}
+.conc-card { border-radius: 8px; padding: 20px 18px; }
+.conc-card.fcr { background: #F9F9F9; border: 1.5px solid #EBEBEB; }
+.conc-card.ncr { background: #F0FAF9; border: 1.5px solid #A0D9D7; }
+.conc-card-tag {
+  font-size: 11px; font-weight: 800; letter-spacing: 0.18em; text-transform: uppercase;
+  margin-bottom: 10px;
+}
+.conc-card.fcr .conc-card-tag { color: #9CA3AF; }
+.conc-card.ncr .conc-card-tag { color: #009F99; }
+.conc-card-title { font-size: 14px; font-weight: 700; color: #212121; margin-bottom: 8px; }
+.conc-card-text  { font-size: 12.5px; color: #6B7280; line-height: 1.6; }
+
+.conc-final {
+  background: #212121; border-radius: 8px; padding: 28px 32px; text-align: center;
+}
+.conc-final .cf-label {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase;
+  color: #009F99; margin-bottom: 12px;
+}
+.conc-final .cf-text {
+  font-size: 14px; font-weight: 600; color: rgba(255,255,255,0.85); line-height: 1.8;
+}
+.conc-final .cf-text strong { color: #fff; }
+.conc-final .cf-text .hl { color: #009F99; }
+
+/* ── SOURCE ── */
+.sec-source {
+  font-size: 10px; color: #9CA3AF; margin-top: 20px; line-height: 1.9;
+}
+.sec-source a { color: #9CA3AF; word-break: break-all; }
+
+/* ── SITE FOOTER ── */
+.site-footer { background: #212121; color: rgba(255,255,255,0.7); }
+.sf-top {
+  max-width: 1280px; margin: 0 auto; padding: 56px 40px 40px;
+  display: flex; gap: 40px; align-items: flex-start; flex-wrap: wrap;
+}
+.sf-logo-block img { height: 30px; width: auto; display: block; margin-bottom: 18px; }
+.sf-tagline { font-size: 11px; color: rgba(255,255,255,0.45); line-height: 1.7; max-width: 220px; }
+.sf-nav { display: flex; flex-wrap: wrap; gap: 0; align-items: center; flex: 1; }
+.sf-nav a { color: rgba(255,255,255,0.6); font-size: 12px; text-decoration: none; padding: 4px 0; }
+.sf-nav .pipe { color: rgba(255,255,255,0.2); margin: 0 12px; font-size: 11px; }
+.sf-contact {
+  display: inline-block; background: #A8B400; color: #fff;
+  font-size: 12px; font-weight: 700; padding: 10px 22px;
+  border-radius: 24px; text-decoration: none; white-space: nowrap; align-self: center;
+}
+.sf-badge img { height: 44px; background: #fff; padding: 6px 10px; border-radius: 4px; display: block; }
+.sf-bottom {
+  max-width: 1280px; margin: 0 auto; padding: 20px 40px 32px;
+  border-top: 1px solid rgba(255,255,255,0.1);
+  display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;
+}
+.sf-copy { font-size: 11px; color: rgba(255,255,255,0.35); }
+.sf-policy a { font-size: 11px; color: rgba(255,255,255,0.35); text-decoration: none; }
+
+@media (max-width: 640px) {
+  .ig-header { padding: 36px 24px 32px; }
+  .ig-section { padding: 32px 24px; }
+  .sh-inner { padding: 0 20px; }
+  .compare-wrap { grid-template-columns: 1fr; }
+  .benefit-grid { grid-template-columns: 1fr; }
+  .conc-compare { grid-template-columns: 1fr; }
+  .big-num-wrap { flex-direction: column; gap: 16px; }
+  .big-num { font-size: 52px; }
+  .sf-top { padding: 40px 20px 28px; flex-direction: column; }
+  .sf-bottom { padding: 16px 20px 24px; }
+}
+</style>
+</head>
+<body>
+
+<!-- SITE HEADER -->
+<header class="site-header">
+  <div class="sh-inner">
+    <a href="https://standardai.co.jp">
+      <img src="https://storage.googleapis.com/studio-design-asset-files/projects/1pqDv08gWj/s-380x106_webp_ecd80ea7-db09-44ae-8dc6-4e02fbfa9fe2.png" alt="Standard AI">
+    </a>
+  </div>
+</header>
+
+<div class="page-wrap">
+<div class="ig">
+
+  <!-- HEADER -->
+  <div class="ig-header">
+    <div class="deco1"></div>
+    <div class="deco2"></div>
+    <p class="ig-eyebrow">Contact Center Design — KPI Evolution 2025</p>
+    <h1 class="ig-title">FCRから<span class="accent">NCR</span>へ</h1>
+    <p class="ig-sub">「顧客が接触しない」コンタクトセンターという設計思想</p>
+    <p class="ig-lead">「いかに初回で解決するか」から、「そもそも接触させない」へ。NCR（No Contact Resolution）が日本のコンタクトセンターに問いかけること。</p>
+  </div>
+
+  <!-- SEC 01: FCR vs NCR -->
+  <div class="ig-section sec-odd">
+    <p class="sec-eyebrow teal">✦ Section 01 — 概念整理</p>
+    <h2 class="sec-title">FCRとNCR ── 対立ではなく、段階の違い</h2>
+    <p class="sec-body">FCR（初回解決率）はあくまで「接触が発生した後」の話。NCRはその一歩手前——接触そのものを発生させないことを設計します。</p>
+
+    <p class="cmp-block-title">設計の起点の違い</p>
+    <div class="compare-wrap">
+      <div class="cmp-col">
+        <div class="cmp-label old">FCR（初回解決率）</div>
+        <div class="cmp-items">
+          <div class="cmp-item old-item"><span class="cmp-dot-old"></span>接触が発生した後に最適化</div>
+          <div class="cmp-item old-item"><span class="cmp-dot-old"></span>1回で解決することが目標</div>
+          <div class="cmp-item old-item"><span class="cmp-dot-old"></span>対応品質の向上が中心</div>
+        </div>
+      </div>
+      <div class="cmp-col">
+        <div class="cmp-label new">NCR（接触回避解決）</div>
+        <div class="cmp-items">
+          <div class="cmp-item new-item"><span class="cmp-dot-new"></span>接触が発生する前に設計</div>
+          <div class="cmp-item new-item"><span class="cmp-dot-new"></span>接触させないことが目標</div>
+          <div class="cmp-item new-item"><span class="cmp-dot-new"></span>顧客体験の設計が中心</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="insight-box">
+      <span class="pre">👉</span>FCRの限界を突き詰めると、自然にNCRの発想に至る。NCRはFCRの先にある次の設計思想。
+    </div>
+
+    <p class="sec-source">
+      参考：Call Centre Helper「From First Contact to No Contact」<br>
+      <a href="https://www.callcentrehelper.com/first-contact-to-no-contact-271737.htm" target="_blank">https://www.callcentrehelper.com/first-contact-to-no-contact-271737.htm</a>
+    </p>
+  </div>
+
+  <!-- SEC 02: 97.9% -->
+  <div class="ig-section sec-even">
+    <p class="sec-eyebrow teal">✦ Section 02 — データ</p>
+    <h2 class="sec-title">97.9%の顧客は、すでに「接触したくない」</h2>
+
+    <div class="big-num-wrap">
+      <div class="big-num">97.9<span style="font-size:32px;font-weight:700;color:rgba(0,159,153,0.7);">%</span></div>
+      <div>
+        <div class="big-num-label">
+          問い合わせをする前に<br>
+          <span class="highlight">Webサイトや説明書などで自己解決を試みている</span>
+        </div>
+        <div class="big-num-source">
+          出典：モビルス株式会社「第5回 お客さま窓口の利用実態調査」（2024年11月）<br>
+          <a href="https://mobilus.co.jp/press-release/41421" target="_blank">https://mobilus.co.jp/press-release/41421</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="insight-box">
+      <span class="pre">👉</span>顧客側にはすでに「できれば接触したくない」という意志がある。企業のセルフサービス設計の質が、そのまま接触件数に直結する。
+    </div>
+  </div>
+
+  <!-- SEC 03: なぜ競争優位になるのか -->
+  <div class="ig-section sec-odd">
+    <p class="sec-eyebrow teal">✦ Section 03 — 競争優位</p>
+    <h2 class="sec-title">なぜ接触機会の最小化が競争優位になるのか</h2>
+    <p class="sec-body">セルフサービスチャネルの品質が高まるほど、入電数の削減につながります。これは単なるコスト削減ではありません。</p>
+
+    <div class="benefit-grid">
+      <div class="benefit-card">
+        <div class="b-icon">💰</div>
+        <div class="b-text">インフラコストの効率化</div>
+      </div>
+      <div class="benefit-card">
+        <div class="b-icon">📚</div>
+        <div class="b-text">トレーニング費用の削減</div>
+      </div>
+      <div class="benefit-card">
+        <div class="b-icon">📊</div>
+        <div class="b-text">繁忙期キャパシティ問題の緩和</div>
+      </div>
+      <div class="benefit-card">
+        <div class="b-icon">🎯</div>
+        <div class="b-text">複雑な問い合わせへの有人集中</div>
+      </div>
+      <div class="benefit-card teal-card" style="grid-column: span 2;">
+        <div class="b-icon">⭐</div>
+        <div class="b-text">オペレーターの専門性向上とエンゲージメント改善</div>
+      </div>
+    </div>
+
+    <div class="point-box">
+      <p class="pl">Key Insight</p>
+      <p class="pt">「<span class="hl">顧客体験の向上</span>」と「<span class="hl">コスト削減</span>」が<br>同じ方向を向く ── これがNCRの本質的な強み</p>
+    </div>
+  </div>
+
+  <!-- SEC 04: 日本の構造的課題 -->
+  <div class="ig-section sec-even">
+    <p class="sec-eyebrow red">✦ Section 04 — 現状分析</p>
+    <h2 class="sec-title">日本のコンタクトセンターが直面する構造的課題</h2>
+    <p class="sec-body">日本の現場では、接触件数の削減と品質維持の両立が難しいとされてきました。背景には2つの要因があります。</p>
+
+    <div class="challenge-wrap">
+      <div class="challenge-card">
+        <div class="challenge-head">
+          <div class="challenge-num">1</div>
+          <div class="challenge-title">データ・AI活用の限定性</div>
+        </div>
+        <div class="challenge-body">
+          顧客データやAI活用が「オペレーター支援」にとどまっており、「接触させない設計」には使われていない。リアルタイムの顧客データ統合と生成AIによる文脈理解が、NCRの土台として必要。
+        </div>
+      </div>
+      <div class="challenge-card">
+        <div class="challenge-head">
+          <div class="challenge-num">2</div>
+          <div class="challenge-title">KPI設計の慣性</div>
+        </div>
+        <div class="challenge-body">
+          「1件あたりの対応品質を高める」ことが長年の中心KPIであり、「接触件数を減らす」という発想が優先順位に組み込まれていない。セルフサービスチャネルは形式的に存在しても、有人対応への転送が多くの現場で発生している。
+        </div>
+      </div>
+    </div>
+
+    <div class="warn-box">
+      <span class="pre">👉</span>「問い合わせを前提に最適化する設計」から「問い合わせを発生させない設計」へ——技術ではなく、設計思想の転換が求められている。
+    </div>
+  </div>
+
+  <!-- SEC 05: KPIをどう変えるか -->
+  <div class="ig-section sec-odd">
+    <p class="sec-eyebrow teal">✦ Section 05 — KPI設計</p>
+    <h2 class="sec-title">KPIをどう変えるか</h2>
+    <p class="sec-body">既存のKPIに加えて、以下の指標を段階的に定義・計測することが有効です。</p>
+
+    <table class="kpi-table">
+      <thead>
+        <tr>
+          <th class="th-existing" style="width:50%">既存KPI（維持）</th>
+          <th class="th-new" style="width:50%">追加KPI（NCR移行用）</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="td-existing">
+            <span class="kpi-badge existing">SL</span>
+            <span class="kpi-desc">応答率（Service Level）</span>
+          </td>
+          <td class="td-new">
+            <span class="kpi-badge new-kpi">接触回避率</span>
+            <span class="kpi-desc">セルフサービスで完結した割合</span>
+          </td>
+        </tr>
+        <tr>
+          <td class="td-existing">
+            <span class="kpi-badge existing">AHT</span>
+            <span class="kpi-desc">平均処理時間</span>
+          </td>
+          <td class="td-new">
+            <span class="kpi-badge new-kpi">セルフサービス完結率</span>
+            <span class="kpi-desc">有人転送なしで解決した割合</span>
+          </td>
+        </tr>
+        <tr>
+          <td class="td-existing">
+            <span class="kpi-badge existing">FCR</span>
+            <span class="kpi-desc">初回解決率</span>
+          </td>
+          <td class="td-new">
+            <span class="kpi-badge new-kpi">問い合わせ防止数</span>
+            <span class="kpi-desc">プロアクティブ提案で抑制できた件数</span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="insight-box">
+      <span class="pre">👉</span>既存KPIと並列で管理することで、NCRへの移行を段階的に進められる。
+    </div>
+  </div>
+
+  <!-- SEC 06: 最初の一歩 -->
+  <div class="ig-section sec-even">
+    <p class="sec-eyebrow teal">✦ Section 06 — 実践</p>
+    <h2 class="sec-title">最初の一歩：「分岐点」を探す</h2>
+
+    <div class="step-flow">
+      <div class="flow-item">
+        <div class="flow-line">
+          <div class="flow-dot short"></div>
+          <div class="flow-connector short"></div>
+        </div>
+        <div class="flow-content">
+          <span class="flow-tag short">短期 — まず着手</span>
+          <div class="flow-title">転送率・離脱率を数値で把握する</div>
+          <div class="flow-items">
+            <div class="flow-item-text">FAQ・チャットボット・Webフォームの有人転送が多い領域を3つ特定</div>
+            <div class="flow-item-text">「なぜ自己解決できなかったのか」——その分岐点を探す</div>
+            <div class="flow-item-text">接触理由の可視化がNCR設計の出発点</div>
+          </div>
+        </div>
+      </div>
+      <div class="flow-item">
+        <div class="flow-line">
+          <div class="flow-dot mid"></div>
+        </div>
+        <div class="flow-content" style="padding-bottom:0;">
+          <span class="flow-tag mid">中期 — 設計へ</span>
+          <div class="flow-title">顧客ジャーニー全体の「接触回避」シナリオを設計</div>
+          <div class="flow-items">
+            <div class="flow-item-text">発送遅延の自動通知などプロアクティブな情報提供</div>
+            <div class="flow-item-text">パーソナライズされたFAQ・チャットボットの改善</div>
+            <div class="flow-item-text">分岐点を起点に、接触しなくて済む導線を設計する</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SEC 07: まとめ -->
+  <div class="ig-section sec-odd">
+    <p class="sec-eyebrow gray">✦ Section 07 — まとめ</p>
+    <h2 class="sec-title">まとめ</h2>
+
+    <div class="conc-compare">
+      <div class="conc-card fcr">
+        <div class="conc-card-tag">FCR</div>
+        <div class="conc-card-title">接触後の解決品質を高める</div>
+        <div class="conc-card-text">接触が発生することを前提に、いかに1回で解決するかを最適化する取り組み</div>
+      </div>
+      <div class="conc-card ncr">
+        <div class="conc-card-tag">NCR</div>
+        <div class="conc-card-title">接触そのものを設計で減らす</div>
+        <div class="conc-card-text">接触が発生する前の段階から設計し、問い合わせを発生させない取り組み</div>
+      </div>
+    </div>
+
+    <div class="conc-final">
+      <p class="cf-label">結論</p>
+      <p class="cf-text">
+        日本のコンタクトセンターにとって、この転換は<br>
+        技術の問題ではなく<strong>設計思想の問題</strong>です。<br><br>
+        まず着手すべきは——<br>
+        <strong><span class="hl">接触理由の可視化</span>と、<span class="hl">分岐点の特定</span>。</strong><br>
+        そこからしか、NCRの設計は始まりません。
+      </p>
+    </div>
+
+    <p class="sec-source">
+      参考：Call Centre Helper「From First Contact to No Contact」<br>
+      <a href="https://www.callcentrehelper.com/first-contact-to-no-contact-271737.htm" target="_blank">https://www.callcentrehelper.com/first-contact-to-no-contact-271737.htm</a><br>
+      出典：モビルス株式会社「第5回 お客さま窓口の利用実態調査」（2024年11月）<br>
+      <a href="https://mobilus.co.jp/press-release/41421" target="_blank">https://mobilus.co.jp/press-release/41421</a>
+    </p>
+  </div>
+
+</div><!-- /.ig -->
+</div><!-- /.page-wrap -->
+
+<!-- SITE FOOTER -->
+<footer class="site-footer">
+  <div class="sf-top">
+    <div class="sf-logo-block">
+      <img src="https://storage.googleapis.com/studio-design-asset-files/projects/1pqDv08gWj/s-338x94_webp_bdccf5bb-745d-46ad-a860-1fd95000511b.png" alt="Standard AI">
+      <p class="sf-tagline">AIで、ビジネスの可能性を広げる。</p>
+    </div>
+    <nav class="sf-nav">
+      <a href="https://standardai.co.jp/about">会社概要</a><span class="pipe">|</span>
+      <a href="https://standardai.co.jp/service">サービス</a><span class="pipe">|</span>
+      <a href="https://standardai.co.jp/cases">導入事例</a><span class="pipe">|</span>
+      <a href="https://standardai.co.jp/blog">ブログ</a><span class="pipe">|</span>
+      <a href="https://standardai.co.jp/recruit">採用情報</a>
+    </nav>
+    <a href="https://standardai.co.jp/contact" class="sf-contact">お問い合わせ</a>
+    <div class="sf-badge">
+      <img src="https://storage.googleapis.com/studio-design-asset-files/projects/1pqDv08gWj/s-500x205_webp_fe376a78-e983-428e-8a3c-4c418a611613.png" alt="ISO 27001">
+    </div>
+  </div>
+  <div class="sf-bottom">
+    <span class="sf-copy">© 2025 Standard AI Inc. All rights reserved.</span>
+    <div class="sf-policy"><a href="https://standardai.co.jp/privacy">プライバシーポリシー</a></div>
+  </div>
+</footer>
+
+</body>
+</html>
